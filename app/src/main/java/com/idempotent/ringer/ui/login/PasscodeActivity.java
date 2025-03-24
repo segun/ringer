@@ -148,8 +148,6 @@ public class PasscodeActivity extends AppCompatActivity {
                     editor.putBoolean("manualLocation", manualLocation);
                     editor.apply();
 
-                    // Send charging status after successful login
-                    ChargingStatusHelper.sendChargingStatusToServer(response.body().getUser().getId(), false, userLocation, manualLocation);
                     finish();
                 } else {
                     Toast.makeText(PasscodeActivity.this, "Invalid passcode. Try again.", Toast.LENGTH_SHORT).show();

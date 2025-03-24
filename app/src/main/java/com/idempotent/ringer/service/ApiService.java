@@ -17,6 +17,6 @@ public interface ApiService {
     @POST("user/register")
     Call<UserResponse> register(@Body RegisterRequest registerRequest);
 
-    @POST("/user/charging-status")
+    @POST("/charging/update-status")
     Call<ChargingStatusResponse> sendChargingStatus(@Body ChargingStatusRequest request);
 }

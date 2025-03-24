@@ -140,7 +140,6 @@ public class ConfirmPasscodeActivity extends AppCompatActivity {
                     Toast.makeText(ConfirmPasscodeActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(ConfirmPasscodeActivity.this, MainActivity.class));
 
-                    ChargingStatusHelper.sendChargingStatusToServer(response.body().getUser().getId(), false, userLocation, manualLocation);
                     finish();
                 } else {
                     progressBar.setVisibility(View.GONE);
