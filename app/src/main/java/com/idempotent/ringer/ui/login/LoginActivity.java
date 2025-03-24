@@ -1,5 +1,6 @@
 package com.idempotent.ringer.ui.login;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,6 +23,7 @@ import com.idempotent.ringer.R;
 public class LoginActivity extends AppCompatActivity {
 
     private EditText etEmailOrPhone, etLocation;
+    private TextView tvLoginOrRegister;
     private Button btnNext;
     private FusedLocationProviderClient fusedLocationClient;
     private String userLocation = "";
@@ -38,8 +41,13 @@ public class LoginActivity extends AppCompatActivity {
 
         etEmailOrPhone = findViewById(R.id.etEmailOrPhone);
         etLocation = findViewById(R.id.etLocation);
+        tvLoginOrRegister = findViewById(R.id.loginOrRegister);
         btnNext = findViewById(R.id.btnNext);
 
+        sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        boolean isRegistered = sharedPreferences.getBoolean("isRegistered", false);
+
+        tvLoginOrRegister.setText(isRegistered ? "Login" : "Register");
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         btnNext.setOnClickListener(v -> {

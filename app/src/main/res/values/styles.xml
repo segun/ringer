@@ -1,0 +1,6 @@
+<resources>
+    <style name="Theme.Ringer.NoActionBar" parent="Theme.Ringer">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+</resources>

@@ -2,13 +2,13 @@ package com.idempotent.ringer.ui.data;
 
 public class LoginRequest {
     private String emailOrPhone;
-    private String password;
+    private String passcode;
     private String location;
     private boolean manualLocation;
 
-    public LoginRequest(String emailOrPhone, String password, String userLocation, boolean manualLocation) {
+    public LoginRequest(String emailOrPhone, String passcode, String userLocation, boolean manualLocation) {
         this.emailOrPhone = emailOrPhone;
-        this.password = password;
+        this.passcode = passcode;
         this.location = userLocation;
         this.manualLocation = manualLocation;
     }
@@ -29,12 +29,12 @@ public class LoginRequest {
         this.location = location;
     }
 
-    public String getPassword() {
-        return password;
+    public String getPasscode() {
+        return passcode;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPasscode(String passcode) {
+        this.passcode = passcode;
     }
 
     public boolean isManualLocation() {

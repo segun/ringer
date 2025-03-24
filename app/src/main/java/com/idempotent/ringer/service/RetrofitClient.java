@@ -6,7 +6,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
-    private static final String BASE_URL = "https://ringer-lity.onrender.com/";
+    // private static final String BASE_URL = "https://ringer-lity.onrender.com/";
+    private static final String BASE_URL = "https://0144-102-89-22-207.ngrok-free.app";
     private static Retrofit retrofit = null;
 
     public static Retrofit getRetrofitInstance() {

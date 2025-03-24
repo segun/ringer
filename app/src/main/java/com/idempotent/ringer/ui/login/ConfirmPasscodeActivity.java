@@ -19,6 +19,7 @@ import com.idempotent.ringer.service.ApiService;
 import com.idempotent.ringer.service.RetrofitClient;
 import com.idempotent.ringer.ui.data.RegisterRequest;
 import com.idempotent.ringer.ui.data.UserResponse;
+import com.idempotent.ringer.utils.ChargingStatusHelper;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -125,16 +126,21 @@ public class ConfirmPasscodeActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
                 Object responseBody = response.body();
                 boolean isSuccess = response.isSuccessful();
-                Log.d("ringer", "Response: " + responseBody + ", isSuccessful: " + isSuccess);
+                Log.d("olu-ringer", "Response: " + responseBody + ", isSuccessful: " + isSuccess);
                 if (isSuccess && responseBody != null) {
                     // Save registration status in SharedPreferences
                     SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putBoolean("isRegistered", true);
-                    editor.apply(); // Apply changes asynchronously
+                    editor.putString("userId", response.body().getUser().getId());  // Save user ID
+                    editor.putString("userLocation", userLocation);
+                    editor.putBoolean("manualLocation", manualLocation);
+                    editor.apply();
 
                     Toast.makeText(ConfirmPasscodeActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(ConfirmPasscodeActivity.this, MainActivity.class));
+
+                    ChargingStatusHelper.sendChargingStatusToServer(response.body().getUser().getId(), false, userLocation, manualLocation);
                     finish();
                 } else {
                     progressBar.setVisibility(View.GONE);

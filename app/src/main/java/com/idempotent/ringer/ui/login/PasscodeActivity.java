@@ -19,15 +19,17 @@ import com.idempotent.ringer.service.ApiService;
 import com.idempotent.ringer.service.RetrofitClient;
 import com.idempotent.ringer.ui.data.LoginRequest;
 import com.idempotent.ringer.ui.data.UserResponse;
+import com.idempotent.ringer.utils.ChargingStatusHelper;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 public class PasscodeActivity extends AppCompatActivity {
 
     private TextView tvTitle, tvPasscode;
     private Button btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, btn0, btnDelete, btnNext;
-    private StringBuilder passcodeBuilder = new StringBuilder();
+    private final StringBuilder passcodeBuilder = new StringBuilder();
     private SharedPreferences sharedPreferences;
     private boolean isRegistered;
 
@@ -124,6 +126,7 @@ public class PasscodeActivity extends AppCompatActivity {
         }
         tvPasscode.setText(displayBuilder.toString());
     }
+
     private void loginUser(String emailOrPhone, String passcode, String userLocation, boolean manualLocation) {
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
         ProgressBar progressBar = findViewById(R.id.progressBar);
@@ -135,10 +138,18 @@ public class PasscodeActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
                 Object responseBody = response.body();
                 boolean isSuccess = response.isSuccessful();
-                Log.d("ringer", "Response: " + responseBody + ", isSuccessful: " + isSuccess);
                 if (isSuccess && responseBody != null) {
                     Toast.makeText(PasscodeActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(PasscodeActivity.this, MainActivity.class));
+                    SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("userId", response.body().getUser().getId());  // Save user ID
+                    editor.putString("userLocation", userLocation);
+                    editor.putBoolean("manualLocation", manualLocation);
+                    editor.apply();
+
+                    // Send charging status after successful login
+                    ChargingStatusHelper.sendChargingStatusToServer(response.body().getUser().getId(), false, userLocation, manualLocation);
                     finish();
                 } else {
                     Toast.makeText(PasscodeActivity.this, "Invalid passcode. Try again.", Toast.LENGTH_SHORT).show();

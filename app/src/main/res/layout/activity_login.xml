@@ -5,6 +5,17 @@
     android:padding="16dp"
     android:gravity="center">
 
+    <!-- Login or Register Label -->
+    <TextView
+        android:id="@+id/loginOrRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="16dp" />
+
     <!-- Email/Phone Input -->
     <EditText
         android:id="@+id/etEmailOrPhone"

@@ -7,6 +7,10 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import androidx.appcompat.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,12 +23,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
-        startActivity(new Intent(this, LoginActivity.class));
-        finish();
-
         setContentView(R.layout.activity_main);
+
+        try {
+            Toolbar toolbar = findViewById(R.id.toolBar);
+            setSupportActionBar(toolbar);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         // Start the foreground service
         startChargingToneService();
@@ -33,14 +39,13 @@ public class MainActivity extends AppCompatActivity {
         stopSoundButton = findViewById(R.id.stopSoundButton);
         stopSoundButton.setEnabled(false);
         stopSoundButton.setOnClickListener(v -> {
-            // Send broadcast to stop sound in service
             Intent stopIntent = new Intent("STOP_SOUND");
             sendBroadcast(stopIntent);
             isSoundPlaying = false;
             stopSoundButton.setEnabled(false);
         });
 
-        // Register a local broadcast receiver to update button state
+        // Register broadcast receiver
         IntentFilter filter = new IntentFilter("SOUND_PLAYING_STATUS");
         registerReceiver(new BroadcastReceiver() {
             @Override
@@ -49,6 +54,41 @@ public class MainActivity extends AppCompatActivity {
                 stopSoundButton.setEnabled(isSoundPlaying);
             }
         }, filter);
+    }
+
+    // Inflate the menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        try {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.main_menu, menu);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // Handle menu item clicks
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_logout) {
+            logout();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    // Logout method
+    private void logout() {
+        // Clear login preference
+        SharedPreferences preferences = getSharedPreferences("myPrefs", MODE_PRIVATE);
+        preferences.edit().remove("isRegistered").apply();
+
+        // Navigate to LoginActivity
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
     private void startChargingToneService() {

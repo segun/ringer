@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.AudioFocusRequest;
 import android.media.AudioManager;
@@ -19,6 +20,16 @@ import android.os.PowerManager;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
+
+import com.idempotent.ringer.service.ApiService;
+import com.idempotent.ringer.service.RetrofitClient;
+import com.idempotent.ringer.ui.data.ChargingStatusRequest;
+import com.idempotent.ringer.ui.data.ChargingStatusResponse;
+import com.idempotent.ringer.utils.ChargingStatusHelper;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ChargingToneService extends Service {
     private static final String CHANNEL_ID = "ChargingToneServiceChannel";
@@ -42,8 +53,21 @@ public class ChargingToneService extends Service {
                         || chargePlug == BatteryManager.BATTERY_PLUGGED_USB
                         || chargePlug == BatteryManager.BATTERY_PLUGGED_WIRELESS;
 
-                if (isPluggedIn && !wasPluggedIn) {
-                    playSound(chargingToneId);
+                SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+                String userLocation = sharedPreferences.getString("userLocation", "Unknown");
+                boolean manualLocation = sharedPreferences.getBoolean("manualLocation", false);
+                String userId = sharedPreferences.getString("userId", null);
+
+                if (userId != null) {
+                    if (isPluggedIn && !wasPluggedIn) {
+                        playSound(chargingToneId);
+                        ChargingStatusHelper.sendChargingStatusToServer(userId, true, userLocation, manualLocation);
+                    } else if (!isPluggedIn && wasPluggedIn) {
+                        // playSound(unplugToneId);
+                        ChargingStatusHelper.sendChargingStatusToServer(userId, false, userLocation, manualLocation);
+                    }
+                } else {
+                    Log.e("olu-ringer", "User ID not found in SharedPreferences");
                 }
 
                 wasPluggedIn = isPluggedIn;
@@ -115,7 +139,7 @@ public class ChargingToneService extends Service {
                 if (status == 0) {
                     releaseWakeLock();
                 } else {
-                    Log.e("SoundPool", "Error loading sound");
+                    Log.e("olu-ringer", "Error loading sound");
                     releaseWakeLock();
                 }
             }
