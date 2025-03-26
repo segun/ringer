@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.idempotent.ringer.service.ApiService;
 import com.idempotent.ringer.service.RetrofitClient;
-import com.idempotent.ringer.ui.data.ChargingStatusRequest;
+import com.idempotent.ringer.ui.data.UpdateChargingStatusRequest;
 import com.idempotent.ringer.ui.data.ChargingStatusResponse;
 
 import retrofit2.Call;
@@ -14,7 +14,7 @@ import retrofit2.Response;
 public class ChargingStatusHelper {
     public static void sendChargingStatusToServer(String userId, boolean isPluggedIn, String userLocation, boolean manualLocation) {
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
-        ChargingStatusRequest request = new ChargingStatusRequest(userId, isPluggedIn, userLocation, manualLocation);
+        UpdateChargingStatusRequest request = new UpdateChargingStatusRequest(userId, isPluggedIn, userLocation, manualLocation);
 
         // print request
         Log.d("olu-ringer", "Sending charging status request: " + request);

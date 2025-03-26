@@ -21,6 +21,7 @@
             android:name=".MainActivity"
             android:theme="@style/Theme.Ringer.NoActionBar" />
         <activity android:name=".ui.login.LoginActivity" />
+        <activity android:name=".ui.graph.GraphActivity" />
         <activity android:name=".ui.login.PasscodeActivity" />
         <activity android:name=".ui.login.ConfirmPasscodeActivity" />
         <activity

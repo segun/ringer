@@ -21,15 +21,7 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
-import com.idempotent.ringer.service.ApiService;
-import com.idempotent.ringer.service.RetrofitClient;
-import com.idempotent.ringer.ui.data.ChargingStatusRequest;
-import com.idempotent.ringer.ui.data.ChargingStatusResponse;
 import com.idempotent.ringer.utils.ChargingStatusHelper;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ChargingToneService extends Service {
     private static final String CHANNEL_ID = "ChargingToneServiceChannel";

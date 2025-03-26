@@ -14,6 +14,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.idempotent.ringer.ui.graph.GraphActivity;
 import com.idempotent.ringer.ui.login.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -45,6 +46,10 @@ public class MainActivity extends AppCompatActivity {
             stopSoundButton.setEnabled(false);
         });
 
+        findViewById(R.id.showReportsButton).setOnClickListener(v -> {
+            Intent intent = new Intent(this, GraphActivity.class);
+            startActivity(intent);
+        });
         // Register broadcast receiver
         IntentFilter filter = new IntentFilter("SOUND_PLAYING_STATUS");
         registerReceiver(new BroadcastReceiver() {
