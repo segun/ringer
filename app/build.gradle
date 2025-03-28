@@ -7,17 +7,36 @@ android {
     compileSdk 34
 
     defaultConfig {
+        versionName project.properties["APP_VERSION_NAME"] ?: "1.0.0"
+        versionCode project.properties["APP_VERSION_CODE"]?.toInteger() ?: 1
         applicationId "com.idempotent.ringer"
         minSdk 26
         targetSdk 34
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    android.applicationVariants.all { variant ->
+        if (variant.buildType.name == "release") {
+            variant.outputs.all { output ->
+                def versionName = project.properties["APP_VERSION_NAME"] ?: "0.0.1"
+                def newApkName = "Ringer-v${versionName}.apk"
+                outputFileName = newApkName
+            }
+        }
+    }
+
+    signingConfigs {
+        release {
+            storeFile file(rootProject.file(System.getenv("STORE_FILE") ?: project.properties["STORE_FILE"]))
+            storePassword System.getenv("STORE_PASSWORD") ?: project.properties["STORE_PASSWORD"]
+            keyAlias System.getenv("KEY_ALIAS") ?: project.properties["KEY_ALIAS"]
+            keyPassword System.getenv("KEY_PASSWORD") ?: project.properties["KEY_PASSWORD"]
+        }
+    }
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }

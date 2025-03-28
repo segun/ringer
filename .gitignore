@@ -16,3 +16,10 @@ local.properties
 server/
 app/build
 .idea
+# Ignore keystore files
+*.jks
+*.keystore
+
+# Ignore local gradle properties with signing info
+**/gradle.properties
+app/debug/
